@@ -19,7 +19,7 @@ CONTAINS
         
         DO I = 1, N
             M = (A + B)/2. !punto medio
-            WRITE(*,*) 'A = ', A, 'B = ', B, 'M = ', M
+!            WRITE(*,*) 'A = ', A, 'B = ', B, 'M = ', M
             IF (F(A)*F(M) <= 0) THEN !Si tienen signo diferente está en ese intervalo.
             !Le agregué un <= en vez de <, porque con f(x) = x, si a = -1 y b = 1, siempre agarra b.
                 B = M
@@ -83,8 +83,8 @@ CONTAINS
         MAXDF = DF(X); !o poner = 0, es lo mismo, la idea es inicializarlo de alguna manera
         DO I = 1, N
             DERIV = DF(X)
-            PRINT *, 'DF(', X, ') = ', DERIV
-            PRINT *, 'MAXDF = ', MAXDF
+!            PRINT *, 'DF(', X, ') = ', DERIV
+!            PRINT *, 'MAXDF = ', MAXDF
             IF (ABS(DERIV) > ABS(MAXDF)) MAXDF = DERIV
             X = X + H
         END DO
