@@ -14,12 +14,14 @@ CONTAINS
         A = XIZQ; B = XDER;
         !Se puede saber de antemano la cantidad de iteraciones:
         N = FLOOR((LOG(ABS(B-A)/ERROR))/LOG(2.0) + 0.5)
+        PRINT *, 'N = ', N
         !El error es la cota de error de dx.
         
-        I = 0
         DO I = 1, N
             M = (A + B)/2. !punto medio
-            IF (F(A)*F(M) < 0) THEN !Si tienen signo diferente está en ese intervalo.
+            WRITE(*,*) 'A = ', A, 'B = ', B, 'M = ', M
+            IF (F(A)*F(M) <= 0) THEN !Si tienen signo diferente está en ese intervalo.
+            !Le agregué un <= en vez de <, porque con f(x) = x, si a = -1 y b = 1, siempre agarra b.
                 B = M
             ELSE
                 A = M
@@ -77,7 +79,8 @@ CONTAINS
         H = ABS(B-A)/ (N-1)
         PRINT *, 'H = ', H
         
-        X = A
+        X = A; 
+        MAXDF = DF(X); !o poner = 0, es lo mismo, la idea es inicializarlo de alguna manera
         DO I = 1, N
             DERIV = DF(X)
             PRINT *, 'DF(', X, ') = ', DERIV
