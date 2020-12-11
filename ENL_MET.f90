@@ -3,16 +3,18 @@ MODULE ENL_MET
     IMPLICIT NONE
 CONTAINS
 
-    !No detecta raíces de grado par. (si no entiendo mal el código, devuelve b en ese caso)
+    !El método de bisección no detecta raíces de grado par.
     !Supongo XIZQ < XDER
-    SUBROUTINE ENL_BISECCION(XIZQ, XDER, ERROR)
+    SUBROUTINE ENL_BISECCION(XIZQ, XDER, ERROR, X)
         REAL(8), INTENT(IN) :: XIZQ, XDER, ERROR
+        REAL(8), INTENT(OUT) :: X
         !
         REAL(8) :: M, A, B
         INTEGER :: I, N
         A = XIZQ; B = XDER;
         !Se puede saber de antemano la cantidad de iteraciones:
         N = FLOOR((LOG(ABS(B-A)/ERROR))/LOG(2.0) + 0.5)
+        !El error es la cota de error de dx.
         
         I = 0
         DO I = 1, N
@@ -23,16 +25,21 @@ CONTAINS
                 A = M
             END IF
         END DO
+        X = A
     END SUBROUTINE
     
     !Supongo XIZQ < XDER
-    SUBROUTINE ENL_PUNTOFIJO_SIST(XIZQ, XDER, TOL, XINI, CP)
+    SUBROUTINE ENL_PUNTOFIJO_SIST(XIZQ, XDER, TOL, X, XINI, CP)
         REAL(8), INTENT(IN) :: XIZQ, XDER, TOL
+        REAL(8), INTENT(OUT) :: X
         REAL(8), INTENT(IN), OPTIONAL :: XINI
         INTEGER, INTENT(IN), OPTIONAL :: CP
         !
-        REAL(8) :: X, A, B, ERROR, LAMBDA
+        REAL(8) :: A, B, ERROR, LAMBDA
         INTEGER :: ITER, MAXITER, CPUNTOS
+        
+        !Esto se podría poner aparte 
+        !(o mejor dicho se podría hacer una funcion que haga el método en sí y llamarla después de esto.)
         IF (PRESENT(XINI)) THEN
             X = XINI
         ELSE
@@ -44,13 +51,15 @@ CONTAINS
         ELSE
             CPUNTOS = 20
         END IF
+        !
+        
         A = XIZQ; B = XDER
         ERROR = 2*TOL
         LAMBDA = 1/MAXDF(A, B, CPUNTOS)
         
         ITER = 0; MAXITER = 100
         DO WHILE ((ERROR >= TOL) .AND. (ITER <= MAXITER))
-            X = X - LAMBDA*F(X)
+            X = X - LAMBDA*F(X) !(g(x))
             ERROR = ABS(F(X)) !Se toma el error como la diferencia que hay en y hasta el 0.
             ITER = ITER + 1
         END DO
