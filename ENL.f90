@@ -1,4 +1,4 @@
-PROGRAM P
+PROGRAM ENL
     !Modulo
     USE ENL_MET
     USE ENL_FUNC
